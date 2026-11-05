@@ -30,7 +30,7 @@ const todayISO = () => {
 const fmtDate = (iso) => new Date(iso + "T12:00:00").toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
 const fmtMonth = (iso) => new Date(iso + "T12:00:00").toLocaleDateString("en-US", { month: "long", year: "numeric" });
 const randomCode = () => {
-  const bytes = crypto.getRandomValues(new Uint8Array(18));
+  const bytes = crypto.getRandomValues(new Uint8Array(24));
   return Array.from(bytes, (b) => "abcdefghjkmnpqrstuvwxyz23456789"[b % 31]).join("");
 };
 const newId = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
@@ -143,7 +143,9 @@ function readFamilyCode() {
     history.replaceState(null, "", url.pathname + url.search + url.hash);
     return fromUrl;
   }
-  return store.get("pb-family");
+  // Codes shorter than 20 characters came from an early build the database rules reject.
+  const saved = store.get("pb-family");
+  return saved && saved.length >= 20 ? saved : null;
 }
 
 // ---------- rendering ----------
