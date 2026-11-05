@@ -1,0 +1,36 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Each family's data sits under a long random family code that only
+    // appears in the family's private link. Nobody can list families, so
+    // the data can only be reached by someone who has the link.
+    function validFamily(fam) {
+      return fam.size() >= 20;
+    }
+
+    match /families/{fam}/kids/{id} {
+      allow get, list: if validFamily(fam);
+      allow create, update: if validFamily(fam)
+        && request.resource.data.name is string
+        && request.resource.data.name.size() <= 40;
+      allow delete: if validFamily(fam);
+    }
+
+    match /families/{fam}/tx/{id} {
+      allow get, list: if validFamily(fam);
+      allow create, update: if validFamily(fam)
+        && request.resource.data.cents is int
+        && request.resource.data.cents > 0
+        && request.resource.data.cents < 100000000
+        && request.resource.data.type in ['earn', 'spend']
+        && request.resource.data.kidId is string
+        && request.resource.data.note is string
+        && request.resource.data.note.size() <= 200;
+      allow delete: if validFamily(fam);
+    }
+
+    match /families/{fam}/meta/{id} {
+      allow get, list, create, update: if validFamily(fam);
+    }
+  }
+}

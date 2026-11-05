@@ -1,0 +1,15 @@
+{
+  "name": "Piggy Bank",
+  "short_name": "Piggy Bank",
+  "description": "Family ledger for the kids' earnings and spending.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#fdf6f0",
+  "theme_color": "#e8618c",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
